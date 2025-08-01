@@ -9,58 +9,58 @@ interface AddTaskInput {
 }
 
 export const addTask = async (_: any, { input }: { input: AddTaskInput }) => {
+  const { taskName, description, priority, tags = [], userId } = input;
+
+  if (!taskName || taskName.trim().length === 0) {
+    return {
+      success: false,
+      task: null,
+      message: "Task name is required and cannot be empty",
+    };
+  }
+
+  if (!description || description.trim().length < 10) {
+    return {
+      success: false,
+      task: null,
+      message:
+        "Description is required and must be at least 10 characters long",
+    };
+  }
+
+  if (priority < 1 || priority > 5) {
+    return {
+      success: false,
+      task: null,
+      message: "Priority must be between 1 and 5",
+    };
+  }
+
+  if (tags.length > 5) {
+    return {
+      success: false,
+      task: null,
+      message: "Tags cannot exceed 5 items",
+    };
+  }
+
+  if (description.toLowerCase().trim() === taskName.toLowerCase().trim()) {
+    return {
+      success: false,
+      task: null,
+      message: "Description cannot be the same as task name",
+    };
+  }
+
+  if (!userId || userId.trim().length === 0) {
+    return {
+      success: false,
+      task: null,
+      message: "User ID is required",
+    };
+  }
+
   try {
-    const { taskName, description, priority, tags = [], userId } = input;
-
-    if (!taskName || taskName.trim().length === 0) {
-      return {
-        success: false,
-        task: null,
-        message: "Task name is required and cannot be empty",
-      };
-    }
-
-    if (!description || description.trim().length < 10) {
-      return {
-        success: false,
-        task: null,
-        message:
-          "Description is required and must be at least 10 characters long",
-      };
-    }
-
-    if (priority < 1 || priority > 5) {
-      return {
-        success: false,
-        task: null,
-        message: "Priority must be between 1 and 5",
-      };
-    }
-
-    if (tags.length > 5) {
-      return {
-        success: false,
-        task: null,
-        message: "Tags cannot exceed 5 items",
-      };
-    }
-
-    if (description.toLowerCase().trim() === taskName.toLowerCase().trim()) {
-      return {
-        success: false,
-        task: null,
-        message: "Description cannot be the same as task name",
-      };
-    }
-
-    if (!userId || userId.trim().length === 0) {
-      return {
-        success: false,
-        task: null,
-        message: "User ID is required",
-      };
-    }
-
     const existingTask = await Task.findOne({
       taskName: taskName.trim(),
       userId: userId.trim(),

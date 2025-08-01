@@ -15,34 +15,34 @@ export const updateTask = async (
   _: any,
   { input }: { input: UpdateTaskInput }
 ) => {
+  const { taskId, userId, taskName, description, priority, isDone, tags } =
+    input;
+
+  if (!taskId || taskId.trim().length === 0) {
+    return {
+      success: false,
+      task: null,
+      message: "Task ID is required",
+    };
+  }
+
+  if (!userId || userId.trim().length === 0) {
+    return {
+      success: false,
+      task: null,
+      message: "User ID is required",
+    };
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(taskId)) {
+    return {
+      success: false,
+      task: null,
+      message: "Invalid task ID format",
+    };
+  }
+
   try {
-    const { taskId, userId, taskName, description, priority, isDone, tags } =
-      input;
-
-    if (!taskId || taskId.trim().length === 0) {
-      return {
-        success: false,
-        task: null,
-        message: "Task ID is required",
-      };
-    }
-
-    if (!userId || userId.trim().length === 0) {
-      return {
-        success: false,
-        task: null,
-        message: "User ID is required",
-      };
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      return {
-        success: false,
-        task: null,
-        message: "Invalid task ID format",
-      };
-    }
-
     const task = await Task.findById(taskId);
     if (!task) {
       return {

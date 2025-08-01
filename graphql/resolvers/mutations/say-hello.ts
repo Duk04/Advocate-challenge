@@ -1,3 +1,3 @@
-export const sayHello = (_: unknown, { name }: { name: string }) => {
-  return `This is hello Mutation ${name}`;
+export const sayHello = (_: unknown) => {
+  return `This is hello Mutation `;
 };
